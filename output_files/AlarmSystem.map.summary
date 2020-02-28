@@ -1,0 +1,14 @@
+Analysis & Synthesis Status : Successful - Tue Jun 05 13:34:56 2018
+Quartus Prime Version : 17.1.0 Build 590 10/25/2017 SJ Lite Edition
+Revision Name : AlarmSystem
+Top-level Entity Name : Shell
+Family : Cyclone IV E
+Total logic elements : 287
+    Total combinational functions : 286
+    Dedicated logic registers : 82
+Total registers : 82
+Total pins : 82
+Total virtual pins : 0
+Total memory bits : 0
+Embedded Multiplier 9-bit elements : 0
+Total PLLs : 0

@@ -1,0 +1,54 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+
+entity AlarmSystemShell is 
+	
+	port(KEY : in std_logic_vector(3 downto 0);
+	     SW : in std_logic_vector(17 downto 0);
+		  CLOCK_50 : in std_logic;
+		  LEDR : out std_logic_vector(17 downto 0);
+		  LEDG : out std_logic_vector(3 downto 0);
+		  HEX0      :  out std_logic_vector(6 downto 0);
+		  HEX1      :  out std_logic_vector(6 downto 0);
+		  HEX2      :  out std_logic_vector(6 downto 0);
+		  HEX3      :  out std_logic_vector(6 downto 0));
+		  
+end AlarmSystemShell;
+
+architecture Shell of AlarmSystemShell is
+
+signal freqDivClk    : std_logic;
+signal s_alarmOn : std_logic;
+signal s_code2, s_code1, s_code0 : std_logic;
+
+begin
+	
+	
+	freqDivider : entity work.FreqDivider(Behavioral)
+					  generic map(N => 50000000)
+					  port map(clkIn => clk,
+								  clkOut => freqDivClk);
+								  
+	debouncerKEY3 : entity work.Debouncer(Behavioral)
+						 port map(refClk => freqDivClk,
+									 dirtyIn => KEY(3),
+									 pulsedOut => s_alarmOn);
+									
+	debouncerKEY2 : entity work.Debouncer(Behavioral)
+						 port map(refClk => freqDivClk,
+									 dirtyIn => KEY(2),
+									 pulsedOut => s_code2);
+									
+	debouncerKEY1 : entity work.Debouncer(Behavioral)
+						 port map(refClk => freqDivClk,
+									 dirtyIn => KEY(1),
+									 pulsedOut => s_code1);
+									
+	debouncerKEY0 : entity work.Debouncer(Behavioral)
+						 port map(refClk => freqDivClk,
+									 dirtyIn => KEY(0),
+									 pulsedOut => s_code0);
+									
+	alarm : entity work.AlarmUnit(Behavioral)
+			  port map(
+									

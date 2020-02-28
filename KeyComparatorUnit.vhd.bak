@@ -1,0 +1,102 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+
+entity KeyComparator is 
+	
+	port(clk : in std_logic;
+		  keysin : in std_logic_vector(2 downto 0);
+		  pwd : out std_logic);
+		  
+end KeyComparator;
+
+architecture Behavioral of KeyComparator is
+
+	type TState is (S0, S1, S2, S3, S4, E1, E2, E3, E4);
+	signal pState, nState: TState;
+	signal Q1, Q2, Q3 : std_logic_vector(2 downto 0);
+	
+begin 
+	
+	sync_proc: process(clk)
+	
+	begin
+	
+		if(rising_edge(clk)) then
+			if(reset = '1') then
+				pState <= S0;
+			else 
+				pState <= nState;
+			end if;
+		end if;
+	
+	end process;
+	
+	comb_proc: process(pState, dataIn)
+	
+	begin
+	
+		case pState is
+			
+			when S0 =>
+				dataOut <= '0';
+				if(dataIn = '1') then
+					nState <= S1;
+				else
+					nState <= E1;
+				end if;
+				
+			when S1 =>
+				dataOut <= '0';
+				if(dataIn = '1') then
+					nState <= S2;
+				else
+					nState <= E2;
+				end if;
+				
+			when S2 =>
+				dataOut <= '0';
+				if(dataIn = '1') then
+					nState <= S3;
+				else
+					nState <= E3;
+				end if;
+				
+			when S3 => 
+				dataOut <= '0';
+				if(dataIn = '1') then
+					nState <= S4;
+				else
+					nState <= E4;
+				end if;
+			
+			when S4 =>
+				dataOut <= '1';
+				if(dataIn = '1') then 
+					nState <= S1;
+				else 
+					nState <= E1;
+				end if;
+				
+			when E1 =>
+				dataOut <= '0';
+				nState <= E2;
+			
+			when E2 =>
+				dataOut <= '0';
+				nState <= E3;
+				
+			when E3 =>
+				dataOut <= '0';
+				nState <= E4;
+				
+			when E4 =>
+				dataOut <= '0';
+				if(dataIn = '1') then
+					nState <= S1;
+				else
+					nState <= E1;
+				end if;
+			
+			end case;
+	end process;
+end Behavioral;
